@@ -1,4 +1,4 @@
 /target
-tests/.outputs/*
+tests/.outputs
 .vscode
 .DS_Store

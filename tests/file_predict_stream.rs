@@ -3,6 +3,8 @@ use voice_activity_detector::{StreamExt as _, VoiceActivityDetector};
 
 #[tokio::test]
 async fn wave_file_predict_stream() -> Result<(), Box<dyn std::error::Error>> {
+    std::fs::create_dir_all("tests/.outputs")?;
+
     let mut reader = hound::WavReader::open("tests/samples/sample.wav")?;
     let spec = reader.spec();
 
