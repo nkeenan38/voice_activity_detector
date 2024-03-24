@@ -4,6 +4,8 @@ use voice_activity_detector::{IteratorExt, VoiceActivityDetector};
 
 #[test]
 fn wave_file_label_iterator() -> Result<(), Box<dyn Error>> {
+    std::fs::create_dir_all("tests/.outputs")?;
+
     let mut reader = hound::WavReader::open("tests/samples/sample.wav")?;
     let spec = reader.spec();
 
