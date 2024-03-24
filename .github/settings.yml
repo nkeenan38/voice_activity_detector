@@ -1,0 +1,42 @@
+repository:
+  name: voice_activity_detector
+  description: A Voice Activity Detector rust library using the Silero VAD model.
+  homepage: null
+  topics: rust, voice-activity-detection
+  private: false
+  has_issues: true
+  has_projects: false
+  has_wiki: false
+  has_downloads: false
+  default_branch: main
+  allow_squash_merge: true
+  allow_merge_commit: false
+  allow_rebase_merge: false
+  delete_branch_on_merge: true
+  enable_automated_security_fixes: true
+  enable_vulnerability_alerts: true
+
+labels:
+  - name: bug
+    color: FF0000
+    description: An issue with the system.
+  - name: enhancement
+    color: 0000FF
+    description: New or improved functionality.
+
+milestones: []
+collaborators: []
+teams: []
+
+branches:
+  - name: main
+    protection:
+      required_pull_request_reviews:
+        required_approving_review_count: 1
+        dismiss_stale_reviews: true
+        require_code_owner_reviews: true
+        dismissal_restrictions: {}
+      required_status_checks: null
+      enforce_admins: true
+      required_linear_history: true
+      restrictions: null
