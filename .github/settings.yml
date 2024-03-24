@@ -2,7 +2,7 @@ repository:
   name: voice_activity_detector
   description: A Voice Activity Detector rust library using the Silero VAD model.
   homepage: null
-  topics: rust, voice-activity-detection
+  topics: rust, speech-recognition, voice-activity-detection
   private: false
   has_issues: true
   has_projects: false
@@ -28,15 +28,6 @@ milestones: []
 collaborators: []
 teams: []
 
-branches:
-  - name: main
-    protection:
-      required_pull_request_reviews:
-        required_approving_review_count: 1
-        dismiss_stale_reviews: true
-        require_code_owner_reviews: true
-        dismissal_restrictions: {}
-      required_status_checks: null
-      enforce_admins: true
-      required_linear_history: true
-      restrictions: null
+# Branch protection rule sync seems to be broken at the moment,
+# so we're creating these manually.
+branches: []
