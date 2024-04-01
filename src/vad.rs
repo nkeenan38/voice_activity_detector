@@ -33,7 +33,7 @@ impl<const N: usize> VoiceActivityDetector<N> {
             .unwrap()
             .with_inter_threads(1)
             .unwrap()
-            .with_model_from_memory(MODEL)
+            .commit_from_memory(MODEL)
             .unwrap();
 
         Ok(Self::with_session(session, sample_rate))
@@ -84,8 +84,16 @@ impl<const N: usize> VoiceActivityDetector<N> {
         let outputs = self.session.run(inputs).unwrap();
 
         // Update h and c recursively.
-        let hn = outputs.get("hn").unwrap().extract_tensor::<f32>().unwrap();
-        let cn = outputs.get("cn").unwrap().extract_tensor::<f32>().unwrap();
+        let hn = outputs
+            .get("hn")
+            .unwrap()
+            .try_extract_tensor::<f32>()
+            .unwrap();
+        let cn = outputs
+            .get("cn")
+            .unwrap()
+            .try_extract_tensor::<f32>()
+            .unwrap();
 
         self.h.assign(&hn.view());
         self.c.assign(&cn.view());
@@ -94,7 +102,7 @@ impl<const N: usize> VoiceActivityDetector<N> {
         let output = outputs
             .get("output")
             .unwrap()
-            .extract_tensor::<f32>()
+            .try_extract_tensor::<f32>()
             .unwrap();
         let probability = output.view()[[0, 0]];
 
