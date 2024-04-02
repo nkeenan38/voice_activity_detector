@@ -23,5 +23,5 @@ thiserror = "1.0.56"
 [dev-dependencies]
 hound = "3.5.1"
 itertools = "0.12.1"
-tokio = { version = "1.36.0", features = ["test-util", "macros"] }
+tokio = { version = "1.37.0", features = ["test-util", "macros"] }
 tokio-stream = { version = "0.1.14", features = ["full"] }
