@@ -100,7 +100,7 @@ The voice activity detector and helper functions work only on mono-channel audio
 We have also currently not verified functionality with all platforms, here is what we tested:
 | Windows | macOS | Linux |
 | :-----: | :---: | :---: |
-| 🟢 | 🟢 | 🟡 |
+| 🟢 | 🟢 | 🟢 |
 
 🟢 = Available
 
