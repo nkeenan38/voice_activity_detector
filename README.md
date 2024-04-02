@@ -96,3 +96,16 @@ Please see the tests directory for more examples.
 ## Limitations
 
 The voice activity detector and helper functions work only on mono-channel audio streams. If your use case involves multiple channels, you will need to split the channels and potentially interleave them again depending on your needs.
+
+We have also currently not verified functionality with all platforms, here is what we tested:
+| Windows | macOS | Linux |
+| :-----: | :---: | :---: |
+| 🟢 | 🟢 | 🟡 |
+
+🟢 = Available
+
+🔵 = Currently in the works
+
+🟡 = Currently not tested
+
+🔴 = Not working currently (possible in the future)
