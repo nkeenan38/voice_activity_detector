@@ -16,4 +16,4 @@ pub use label::LabeledAudio;
 pub use sample::Sample;
 #[cfg(feature = "async")]
 pub use stream::{LabelStream, PredictStream, StreamExt};
-pub use vad::VoiceActivityDetector;
+pub use vad::{VoiceActivityDetector, VoiceActivityDetectorBuilder};

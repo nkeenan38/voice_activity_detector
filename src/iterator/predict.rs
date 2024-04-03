@@ -2,20 +2,20 @@ use crate::predict::PredictState;
 use crate::Sample;
 
 /// Predicts speech in an iterator of audio samples.
-pub struct PredictIterator<T, I, const N: usize>
+pub struct PredictIterator<T, I>
 where
     I: Iterator,
 {
     pub(super) iter: I,
-    pub(super) state: PredictState<T, N>,
+    pub(super) state: PredictState<T>,
 }
 
-impl<T, I, const N: usize> Iterator for PredictIterator<T, I, N>
+impl<T, I> Iterator for PredictIterator<T, I>
 where
     T: Sample,
     I: Iterator<Item = T>,
 {
-    type Item = ([T; N], f32);
+    type Item = (Vec<T>, f32);
 
     fn next(&mut self) -> Option<Self::Item> {
         for sample in self.iter.by_ref() {

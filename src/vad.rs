@@ -4,7 +4,8 @@ use crate::{error::Error, Sample};
 
 /// A voice activity detector session.
 #[derive(Debug)]
-pub struct VoiceActivityDetector<const N: usize> {
+pub struct VoiceActivityDetector {
+    chunk_size: usize,
     sample_rate: i64,
     session: ort::Session,
     h: ndarray::Array3<f32>,
@@ -14,41 +15,15 @@ pub struct VoiceActivityDetector<const N: usize> {
 /// The silero ONNX model as bytes.
 const MODEL: &[u8] = include_bytes!("silero_vad.onnx");
 
-impl<const N: usize> VoiceActivityDetector<N> {
-    /// Creates a new [VoiceActivityDetector].
-    pub fn try_with_sample_rate(sample_rate: impl Into<i64>) -> Result<Self, Error> {
-        let sample_rate: i64 = sample_rate.into();
-        if (sample_rate as f32) / (N as f32) > 31.25 {
-            return Err(Error::VadConfigError {
-                sample_rate,
-                chunk_size: N,
-            });
-        }
-
-        let session = Session::builder()
-            .unwrap()
-            .with_optimization_level(GraphOptimizationLevel::Level3)
-            .unwrap()
-            .with_intra_threads(1)
-            .unwrap()
-            .with_inter_threads(1)
-            .unwrap()
-            .commit_from_memory(MODEL)
-            .unwrap();
-
-        Ok(Self::with_session(session, sample_rate))
+impl VoiceActivityDetector {
+    /// Create a new [VoiceActivityDetectorBuilder].
+    pub fn builder() -> VoiceActivityDetectorBuilder {
+        VoiceActivityDetectorConfig::builder()
     }
 
-    /// Creates a new [VoiceActivityDetector] using the provided ONNX runtime session.
-    ///
-    /// Use this if the default ONNX session configuration is not to your liking.
-    pub fn with_session(session: Session, sample_rate: impl Into<i64>) -> Self {
-        Self {
-            session,
-            sample_rate: sample_rate.into(),
-            h: ndarray::Array3::<f32>::zeros((2, 1, 64)),
-            c: ndarray::Array3::<f32>::zeros((2, 1, 64)),
-        }
+    /// Gets the chunks size
+    pub(crate) fn chunk_size(&self) -> usize {
+        self.chunk_size
     }
 
     /// Resets the state of the voice activity detector session.
@@ -66,8 +41,8 @@ impl<const N: usize> VoiceActivityDetector<N> {
         S: Sample,
         I: IntoIterator<Item = S>,
     {
-        let mut input = ndarray::Array2::<f32>::zeros((1, N));
-        for (i, sample) in samples.into_iter().take(N).enumerate() {
+        let mut input = ndarray::Array2::<f32>::zeros((1, self.chunk_size));
+        for (i, sample) in samples.into_iter().take(self.chunk_size).enumerate() {
             input[[0, i]] = sample.to_f32();
         }
 
@@ -108,15 +83,53 @@ impl<const N: usize> VoiceActivityDetector<N> {
 
         probability
     }
+}
 
-    /// Predicts the existence of speech in an array of audio samples.
-    ///
-    /// This is provided as an alternative to [Self::predict] in order to
-    /// guarantee the samples are the exact correct length.
-    pub fn predict_array<S>(&mut self, samples: [S; N]) -> f32
-    where
-        S: Sample,
-    {
-        self.predict(samples)
+/// The configuration for the [VoiceActivityDetector]. Used to create
+/// a [VoiceActivityDetectorBuilder] that performs runtime validation on build.
+#[derive(Debug, typed_builder::TypedBuilder)]
+#[builder(
+    builder_method(vis = ""),
+    builder_type(name = VoiceActivityDetectorBuilder, vis = "pub"),
+    build_method(into = Result<VoiceActivityDetector, Error>, vis = "pub"))
+]
+struct VoiceActivityDetectorConfig {
+    #[builder(setter(into))]
+    chunk_size: usize,
+    #[builder(setter(into))]
+    sample_rate: i64,
+    #[builder(default, setter(strip_option))]
+    session: Option<ort::Session>,
+}
+
+impl From<VoiceActivityDetectorConfig> for Result<VoiceActivityDetector, Error> {
+    fn from(value: VoiceActivityDetectorConfig) -> Self {
+        if (value.sample_rate as f32) / (value.chunk_size as f32) > 31.25 {
+            return Err(Error::VadConfigError {
+                sample_rate: value.sample_rate,
+                chunk_size: value.chunk_size,
+            });
+        }
+
+        let session = value.session.unwrap_or_else(|| {
+            Session::builder()
+                .unwrap()
+                .with_optimization_level(GraphOptimizationLevel::Level3)
+                .unwrap()
+                .with_intra_threads(1)
+                .unwrap()
+                .with_inter_threads(1)
+                .unwrap()
+                .commit_from_memory(MODEL)
+                .unwrap()
+        });
+
+        Ok(VoiceActivityDetector {
+            session,
+            chunk_size: value.chunk_size,
+            sample_rate: value.sample_rate,
+            h: ndarray::Array3::<f32>::zeros((2, 1, 64)),
+            c: ndarray::Array3::<f32>::zeros((2, 1, 64)),
+        })
     }
 }
