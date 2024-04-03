@@ -8,21 +8,21 @@ use crate::Sample;
 
 /// Predicts speech in a stream of audio samples.
 #[pin_project]
-pub struct PredictStream<T, St, const N: usize>
+pub struct PredictStream<T, St>
 where
     St: Stream,
 {
     #[pin]
     pub(super) stream: St,
-    pub(super) state: PredictState<T, N>,
+    pub(super) state: PredictState<T>,
 }
 
-impl<T, St, const N: usize> Stream for PredictStream<T, St, N>
+impl<T, St> Stream for PredictStream<T, St>
 where
     T: Sample,
     St: Stream<Item = T>,
 {
-    type Item = ([T; N], f32);
+    type Item = (Vec<T>, f32);
 
     fn poll_next(
         self: std::pin::Pin<&mut Self>,

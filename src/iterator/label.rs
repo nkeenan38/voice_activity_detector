@@ -3,20 +3,20 @@ use crate::{PredictIterator, Sample};
 
 /// Labels an iterator of speech samples as either speech or non-speech according
 /// to the provided speech sensitity.
-pub struct LabelIterator<T, I, const N: usize>
+pub struct LabelIterator<T, I>
 where
     I: Iterator,
 {
-    pub(super) iter: PredictIterator<T, I, N>,
-    pub(super) state: LabelState<T, N>,
+    pub(super) iter: PredictIterator<T, I>,
+    pub(super) state: LabelState<T>,
 }
 
-impl<T, I, const N: usize> Iterator for LabelIterator<T, I, N>
+impl<T, I> Iterator for LabelIterator<T, I>
 where
     T: Sample,
     I: Iterator<Item = T>,
 {
-    type Item = LabeledAudio<T, N>;
+    type Item = LabeledAudio<T>;
 
     fn next(&mut self) -> Option<Self::Item> {
         if let Some(buffered) = self.state.try_buffer() {

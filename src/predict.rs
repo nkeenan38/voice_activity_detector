@@ -1,37 +1,33 @@
+use std::mem;
+
 use crate::{Sample, VoiceActivityDetector};
 
-pub struct PredictState<T, const N: usize> {
-    vad: VoiceActivityDetector<N>,
-    buffer: [T; N],
-    buffer_size: usize,
+pub struct PredictState<T> {
+    vad: VoiceActivityDetector,
+    buffer: Vec<T>,
 }
 
-impl<T, const N: usize> PredictState<T, N>
+impl<T> PredictState<T>
 where
     T: Sample,
 {
-    pub fn new(vad: VoiceActivityDetector<N>) -> Self {
+    pub fn new(vad: VoiceActivityDetector) -> Self {
+        let chunk_size = vad.chunk_size();
         Self {
             vad,
-            buffer: [T::default(); N],
-            buffer_size: 0,
+            buffer: Vec::with_capacity(chunk_size),
         }
     }
 
-    pub fn try_next(&mut self, sample: T) -> Option<([T; N], f32)> {
-        self.buffer[self.buffer_size] = sample;
-        self.buffer_size += 1;
-
-        if self.buffer_size < N {
+    pub fn try_next(&mut self, sample: T) -> Option<(Vec<T>, f32)> {
+        self.buffer.push(sample);
+        if self.buffer.len() < self.vad.chunk_size() {
             return None;
         }
 
-        let probability = self.vad.predict_array(self.buffer);
-        let output = Some((self.buffer, probability));
+        let probability = self.vad.predict(self.buffer.iter().copied());
+        let buffer = mem::replace(&mut self.buffer, Vec::with_capacity(self.vad.chunk_size()));
 
-        self.buffer.fill(T::default());
-        self.buffer_size = 0;
-
-        output
+        Some((buffer, probability))
     }
 }

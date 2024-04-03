@@ -8,31 +8,22 @@ This crate provides a standalone Voice Activity Detector (VAD) which can be used
 
 The VAD predicts speech in a chunk of Linear Pulse Code Modulation (LPCM) encoded audio samples. These may be 8 or 16 bit integers or 32 bit floats.
 
-The model is trained using chunk sizes of 256, 512, and 768 samples for an 8000 hz sample rate. It is trained using chunk sizes of 512, 768, 1024 samples for a 16,000 hz sample rate. These values are recommended for optimal performance, but are not required.
+The model is trained using chunk sizes of 256, 512, and 768 samples for an 8000 hz sample rate. It is trained using chunk sizes of 512, 768, 1024 samples for a 16,000 hz sample rate. These values are recommended for optimal performance, but are not required. The only requirement imposed by the underlying model is the sample rate must be no larger than 31.25 times the chunk size.
+
+The samples passed to `predict` will be truncacted or padded if they are not of the correct length.
 
 ```rust
 fn main() -> Result<(), voice_activity_detector::Error> {
     use voice_activity_detector::{VoiceActivityDetector};
 
     let chunk = vec![0i16; 512];
-    let mut vad = VoiceActivityDetector::<512>::try_with_sample_rate(8000)?;
+    let mut vad = VoiceActivityDetector::builder()
+        .sample_rate(8000)
+        .chunk_size(512usize)
+        .build()?;
     let probability = vad.predict(chunk);
     println!("probability: {}", probability);
 
-    Ok(())
-}
-```
-
-The samples passed to `predict` will be truncacted or padded if they are not of the correct length. If you would like to ensure this does not happen, you must check the lengths of your inputs or use the `predict_array` function.
-
-```rust
-fn main() -> Result<(), voice_activity_detector::Error> {
-    use voice_activity_detector::{VoiceActivityDetector};
-
-    let chunk = [0i16; 512];
-    let mut vad = VoiceActivityDetector::<512>::try_with_sample_rate(8000)?;
-    let probability = vad.predict_array(chunk);
-    println!("probability: {}", probability);
     Ok(())
 }
 ```
@@ -52,7 +43,10 @@ fn main() -> Result<(), voice_activity_detector::Error> {
     use voice_activity_detector::{IteratorExt, VoiceActivityDetector};
 
     let samples = [0i16; 512000];
-    let vad = VoiceActivityDetector::<512>::try_with_sample_rate(8000)?;
+    let vad = VoiceActivityDetector::builder()
+        .sample_rate(8000)
+        .chunk_size(512usize)
+        .build()?;
 
     let probabilities = samples.into_iter().predict(vad);
     for (chunk, probability) in probabilities {
@@ -77,7 +71,10 @@ fn main() -> Result<(), voice_activity_detector::Error> {
     use voice_activity_detector::{LabeledAudio, IteratorExt, VoiceActivityDetector};
 
     let samples = [0i16; 51200];
-    let vad = VoiceActivityDetector::<512>::try_with_sample_rate(8000)?;
+    let vad = VoiceActivityDetector::builder()
+        .sample_rate(8000)
+        .chunk_size(512usize)
+        .build()?;
 
     // This will label any audio chunks with a probability greater than 75% as speech,
     // and label the 3 additional chunks before and after these chunks as speech.

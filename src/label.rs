@@ -1,17 +1,17 @@
 use std::{collections::VecDeque, usize};
 
 /// Labels a chunk of audio as either speech or non-speech.
-#[derive(Copy, Clone, Debug)]
-pub enum LabeledAudio<T, const N: usize> {
+#[derive(Clone, Debug)]
+pub enum LabeledAudio<T> {
     /// The voice activity detector predicted a speech probability higher
     /// than the provided threshold.
-    Speech([T; N]),
+    Speech(Vec<T>),
     /// The voice activity detector predicted a speech probability lower
     /// than the provided threshold.
-    NonSpeech([T; N]),
+    NonSpeech(Vec<T>),
 }
 
-impl<T, const N: usize> LabeledAudio<T, N> {
+impl<T> LabeledAudio<T> {
     /// Returns true if the audio label is AudioLabel::Speech
     pub fn is_speech(&self) -> bool {
         match &self {
@@ -29,9 +29,9 @@ impl<T, const N: usize> LabeledAudio<T, N> {
     }
 }
 
-impl<T, const N: usize> IntoIterator for LabeledAudio<T, N> {
+impl<T> IntoIterator for LabeledAudio<T> {
     type Item = T;
-    type IntoIter = core::array::IntoIter<T, N>;
+    type IntoIter = std::vec::IntoIter<T>;
 
     fn into_iter(self) -> Self::IntoIter {
         match self {
@@ -54,14 +54,14 @@ enum LabelStateInner {
 }
 
 #[derive(Debug)]
-pub(crate) struct LabelState<T, const N: usize> {
+pub(crate) struct LabelState<T> {
     threshold: f32,
     padding_chunks: usize,
-    buffer: VecDeque<[T; N]>,
+    buffer: VecDeque<Vec<T>>,
     state: LabelStateInner,
 }
 
-impl<T, const N: usize> LabelState<T, N> {
+impl<T> LabelState<T> {
     pub fn new(threshold: f32, padding_chunks: usize) -> Self {
         Self {
             threshold,
@@ -71,7 +71,7 @@ impl<T, const N: usize> LabelState<T, N> {
         }
     }
 
-    pub fn try_buffer(&mut self) -> Option<LabeledAudio<T, N>> {
+    pub fn try_buffer(&mut self) -> Option<LabeledAudio<T>> {
         match self.state {
             LabelStateInner::Idle => {
                 // If the buffer has grown too large, return the oldest chunk as non-speech.
@@ -114,7 +114,7 @@ impl<T, const N: usize> LabelState<T, N> {
         }
     }
 
-    pub fn try_next(&mut self, chunk: [T; N], probability: f32) -> Option<LabeledAudio<T, N>> {
+    pub fn try_next(&mut self, chunk: Vec<T>, probability: f32) -> Option<LabeledAudio<T>> {
         match self.state {
             LabelStateInner::Idle => {
                 // Add the chunk to the buffer
@@ -170,7 +170,7 @@ impl<T, const N: usize> LabelState<T, N> {
         }
     }
 
-    pub fn flush(&mut self) -> Option<LabeledAudio<T, N>> {
+    pub fn flush(&mut self) -> Option<LabeledAudio<T>> {
         match self.state {
             LabelStateInner::Idle => self
                 .buffer
