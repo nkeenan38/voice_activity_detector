@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.4](https://github.com/nkeenan38/voice_activity_detector/compare/v0.0.3...v0.0.4) - 2024-04-19
+
+### Other
+- *(deps)* bump rustls from 0.22.2 to 0.22.4 in the cargo group ([#14](https://github.com/nkeenan38/voice_activity_detector/pull/14))
+- Add platform support table to README.md ([#8](https://github.com/nkeenan38/voice_activity_detector/pull/8))
+
 ## [0.0.3](https://github.com/nkeenan38/voice_activity_detector/compare/v0.0.2...v0.0.3) - 2024-04-03
 
 ### Added
