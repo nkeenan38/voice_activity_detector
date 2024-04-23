@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.5](https://github.com/nkeenan38/voice_activity_detector/compare/v0.0.4...v0.0.5) - 2024-04-23
+
+### Other
+- *(deps)* bump thiserror from 1.0.58 to 1.0.59 ([#15](https://github.com/nkeenan38/voice_activity_detector/pull/15))
+- *(deps)* bump typed-builder from 0.18.1 to 0.18.2 ([#16](https://github.com/nkeenan38/voice_activity_detector/pull/16))
+
 ## [0.0.4](https://github.com/nkeenan38/voice_activity_detector/compare/v0.0.3...v0.0.4) - 2024-04-19
 
 ### Other
