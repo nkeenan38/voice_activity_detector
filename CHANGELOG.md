@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.6](https://github.com/nkeenan38/voice_activity_detector/compare/v0.0.5...v0.0.6) - 2024-04-30
+
+### Other
+- *(deps)* bump ort from 2.0.0-rc.1 to 2.0.0-rc.2 ([#18](https://github.com/nkeenan38/voice_activity_detector/pull/18))
+
 ## [0.0.5](https://github.com/nkeenan38/voice_activity_detector/compare/v0.0.4...v0.0.5) - 2024-04-23
 
 ### Other
