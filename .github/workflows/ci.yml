@@ -42,7 +42,17 @@ jobs:
 
   test:
     name: test
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            ort_dylib_path: ./runtimes/libonnxruntime.linux-x64-1.18.0.so
+          - os: macos-latest
+            ort_dylib_path: ./runtimes/libonnxruntime.osx-arm64-1.18.0.dylib
+          - os: windows-latest
+            ort_dylib_path: ./runtimes/libonnxruntime.win-x64-1.18.0.dll
+    runs-on: ${{ matrix.os }}
     steps:
       - name: checkout
         uses: actions/checkout@v4
@@ -57,3 +67,5 @@ jobs:
 
       - name: test
         run: cargo test --all-features
+        env:
+          ORT_DYLIB_PATH: ${{ matrix.ort_dylib_path }}
