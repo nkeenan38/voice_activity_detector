@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.7](https://github.com/nkeenan38/voice_activity_detector/compare/v0.0.6...v0.0.7) - 2024-06-03
+
+### Added
+- add load-dynamic feature flag ([#27](https://github.com/nkeenan38/voice_activity_detector/pull/27))
+
+### Other
+- add chunk stream test/example ([#24](https://github.com/nkeenan38/voice_activity_detector/pull/24))
+
 ## [0.0.6](https://github.com/nkeenan38/voice_activity_detector/compare/v0.0.5...v0.0.6) - 2024-04-30
 
 ### Other
