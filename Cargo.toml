@@ -10,6 +10,7 @@ readme = "README.md"
 keywords = ["speech", "recognition", "voice", "activity", "detection"]
 categories = ["multimedia::audio"]
 resolver = "2"
+include = ["src/**/*", "LICENSE", "README.md", "CHANGELOG.md"]
 
 [dependencies]
 futures = "0.3.30"
