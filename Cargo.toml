@@ -1,6 +1,6 @@
 [package]
 name = "voice_activity_detector"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["Nick Keenan <nkeenan38@gmail.com>"]
 description = "Voice Activity Detector using the Silero VAD model."
