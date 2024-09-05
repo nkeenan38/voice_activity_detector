@@ -1,4 +1,4 @@
-use std::{collections::VecDeque, usize};
+use std::collections::VecDeque;
 
 /// Labels a chunk of audio as either speech or non-speech.
 #[derive(Clone, Debug)]
