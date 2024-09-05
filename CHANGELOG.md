@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.1.1](https://github.com/nkeenan38/voice_activity_detector/compare/v0.1.0...v0.1.1) - 2024-09-05
+
+### Fixed
+- pin ort version ([#41](https://github.com/nkeenan38/voice_activity_detector/pull/41))
+
 ## [0.1.0](https://github.com/nkeenan38/voice_activity_detector/compare/v0.0.6...v0.1.0) - 2024-06-03
 
 ### Added
