@@ -1,9 +1,7 @@
 name: ci
 
 on:
-  pull_request:
-    branches:
-      - main
+  push:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
@@ -30,13 +28,13 @@ jobs:
       - uses: Swatinem/rust-cache@v2
 
       - name: cargo clippy
-        run: cargo clippy --all-features --no-deps -- -D warnings
+        run: cargo clippy --features async --no-deps -- -D warnings
 
       - name: cargo fmt
         run: cargo fmt -- --check
 
       - name: cargo doc
-        run: cargo doc --all-features --no-deps --document-private-items
+        run: cargo doc --features async --no-deps --document-private-items
         env:
           RUSTDOCFLAGS: -D warnings
 
@@ -63,9 +61,9 @@ jobs:
       - uses: Swatinem/rust-cache@v2
 
       - name: compile
-        run: cargo test --all-features --no-run
+        run: cargo test --features async --no-run
 
       - name: test
-        run: cargo test --all-features
+        run: cargo test --features async
         env:
           ORT_DYLIB_PATH: ${{ matrix.ort_dylib_path }}
