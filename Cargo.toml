@@ -17,7 +17,7 @@ futures = "0.3.31"
 ndarray = "0.16.1"
 ort = { version = "2.0.0-rc.9", features = ["ndarray"] }
 pin-project = "1.1.10"
-thiserror = "2.0.12"
+thiserror = "^2"
 typed-builder = "0.20.1"
 
 [dev-dependencies]
