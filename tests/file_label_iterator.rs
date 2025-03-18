@@ -12,7 +12,7 @@ fn wave_file_label_iterator() -> Result<(), Box<dyn Error>> {
     let mut speech = hound::WavWriter::create("tests/.outputs/label.iter.speech.wav", spec)?;
     let mut nonspeech = hound::WavWriter::create("tests/.outputs/label.iter.nonspeech.wav", spec)?;
 
-    let vad = VoiceActivityDetector::builder()
+    let mut vad = VoiceActivityDetector::builder()
         .chunk_size(256usize)
         .sample_rate(spec.sample_rate)
         .build()?;
@@ -20,7 +20,7 @@ fn wave_file_label_iterator() -> Result<(), Box<dyn Error>> {
     let chunks = reader
         .samples::<i16>()
         .map_while(Result::ok)
-        .label(vad, 0.5, 10);
+        .label(&mut vad, 0.5, 10);
 
     for chunk in chunks {
         if chunk.is_speech() {

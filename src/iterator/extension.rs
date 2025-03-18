@@ -5,7 +5,10 @@ use crate::{LabelIterator, PredictIterator, Sample, VoiceActivityDetector};
 /// Extensions for iterators.
 pub trait IteratorExt: Iterator {
     /// Creates a new [PredictIterator] from an iterator of samples.
-    fn predict(self, vad: VoiceActivityDetector) -> PredictIterator<Self::Item, Self>
+    fn predict<'a>(
+        self,
+        vad: &'a mut VoiceActivityDetector<'a>,
+    ) -> PredictIterator<'a, Self::Item, Self>
     where
         Self::Item: Sample,
         Self: Sized,
@@ -17,12 +20,12 @@ pub trait IteratorExt: Iterator {
     }
 
     /// Creates a new [LabelIterator] from an iterator of samples.
-    fn label(
+    fn label<'a>(
         self,
-        vad: VoiceActivityDetector,
+        vad: &'a mut VoiceActivityDetector<'a>,
         threshold: f32,
         padding_chunks: usize,
-    ) -> LabelIterator<Self::Item, Self>
+    ) -> LabelIterator<'a, Self::Item, Self>
     where
         Self::Item: Sample,
         Self: Sized,

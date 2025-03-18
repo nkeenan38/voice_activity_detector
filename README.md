@@ -41,12 +41,12 @@ fn main() -> Result<(), voice_activity_detector::Error> {
     use voice_activity_detector::{IteratorExt, VoiceActivityDetector};
 
     let samples = [0i16; 5120];
-    let vad = VoiceActivityDetector::builder()
+    let mut vad = VoiceActivityDetector::builder()
         .sample_rate(8000)
         .chunk_size(512usize)
         .build()?;
 
-    let probabilities = samples.into_iter().predict(vad);
+    let probabilities = samples.into_iter().predict(&mut vad);
     for (chunk, probability) in probabilities {
         if probability > 0.5 {
             println!("speech detected!");
@@ -68,14 +68,14 @@ fn main() -> Result<(), voice_activity_detector::Error> {
     use voice_activity_detector::{LabeledAudio, IteratorExt, VoiceActivityDetector};
 
     let samples = [0i16; 51200];
-    let vad = VoiceActivityDetector::builder()
+    let mut vad = VoiceActivityDetector::builder()
         .sample_rate(8000)
         .chunk_size(512usize)
         .build()?;
 
     // This will label any audio chunks with a probability greater than 75% as speech,
     // and label the 3 additional chunks before and after these chunks as speech.
-    let labels = samples.into_iter().label(vad, 0.75, 3);
+    let labels = samples.into_iter().label(&mut vad, 0.75, 3);
     for label in labels {
         match label {
             LabeledAudio::Speech(_) => println!("speech detected!"),

@@ -9,16 +9,16 @@ use crate::{PredictStream, Sample};
 /// Labels a stream of speech samples as either speech or non-speech according
 /// to the provided speech sensitity.
 #[pin_project]
-pub struct LabelStream<T, St>
+pub struct LabelStream<'a, T, St>
 where
     St: Stream,
 {
     #[pin]
-    pub(super) stream: PredictStream<T, St>,
+    pub(super) stream: PredictStream<'a, T, St>,
     pub(super) state: LabelState<T>,
 }
 
-impl<T, St> Stream for LabelStream<T, St>
+impl<T, St> Stream for LabelStream<'_, T, St>
 where
     T: Sample,
     St: Stream<Item = T>,
