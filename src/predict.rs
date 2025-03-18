@@ -3,7 +3,7 @@ use std::mem;
 use crate::{Sample, VoiceActivityDetector};
 
 pub struct PredictState<'a, T> {
-    vad: &'a mut VoiceActivityDetector<'a>,
+    vad: &'a mut VoiceActivityDetector,
     buffer: Vec<T>,
 }
 
@@ -11,7 +11,7 @@ impl<'a, T> PredictState<'a, T>
 where
     T: Sample,
 {
-    pub fn new(vad: &'a mut VoiceActivityDetector<'a>) -> Self {
+    pub fn new(vad: &'a mut VoiceActivityDetector) -> Self {
         let chunk_size = vad.chunk_size();
         Self {
             vad,
