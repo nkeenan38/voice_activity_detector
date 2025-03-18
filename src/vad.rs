@@ -1,4 +1,4 @@
-use ort::{GraphOptimizationLevel, Session};
+use ort::{session::Session, session::builder::GraphOptimizationLevel};
 
 use crate::{error::Error, Sample};
 
@@ -7,7 +7,7 @@ use crate::{error::Error, Sample};
 pub struct VoiceActivityDetector {
     chunk_size: usize,
     sample_rate: i64,
-    session: ort::Session,
+    session: Session,
     h: ndarray::Array3<f32>,
     c: ndarray::Array3<f32>,
 }
@@ -99,7 +99,7 @@ struct VoiceActivityDetectorConfig {
     #[builder(setter(into))]
     sample_rate: i64,
     #[builder(default, setter(strip_option))]
-    session: Option<ort::Session>,
+    session: Option<Session>,
 }
 
 impl From<VoiceActivityDetectorConfig> for Result<VoiceActivityDetector, Error> {
