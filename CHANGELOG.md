@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.2.0](https://github.com/nkeenan38/voice_activity_detector/compare/v0.1.1...v0.2.0) - 2025-03-19
+
+### Added
+
+- [**breaking**] borrowed sessions and vad([#45](https://github.com/nkeenan38/voice_activity_detector/pull/45))
+
+### Other
+
+- Upgrade ort and add nparray features ([#42](https://github.com/nkeenan38/voice_activity_detector/pull/42))
+
 ## [0.1.1](https://github.com/nkeenan38/voice_activity_detector/compare/v0.1.0...v0.1.1) - 2024-09-05
 
 ### Fixed
