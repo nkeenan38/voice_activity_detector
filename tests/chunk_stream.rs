@@ -32,14 +32,14 @@ async fn chunk_stream() -> Result<(), Box<dyn std::error::Error>> {
     let mut reader = hound::WavReader::open("tests/samples/sample.wav")?;
     let spec = reader.spec();
 
-    let vad = VoiceActivityDetector::builder()
+    let mut vad = VoiceActivityDetector::builder()
         .sample_rate(8000)
         .chunk_size(512usize)
         .build()
         .unwrap();
 
     let chunks = reader.samples::<i16>().map_while(Result::ok);
-    let mut labels = tokio_stream::iter(chunks).label(vad, 0.75, 3).fuse();
+    let mut labels = tokio_stream::iter(chunks).label(&mut vad, 0.75, 3).fuse();
 
     for i in 0.. {
         let next = labels

@@ -2,15 +2,15 @@ use crate::predict::PredictState;
 use crate::Sample;
 
 /// Predicts speech in an iterator of audio samples.
-pub struct PredictIterator<T, I>
+pub struct PredictIterator<'a, T, I>
 where
     I: Iterator,
 {
     pub(super) iter: I,
-    pub(super) state: PredictState<T>,
+    pub(super) state: PredictState<'a, T>,
 }
 
-impl<T, I> Iterator for PredictIterator<T, I>
+impl<T, I> Iterator for PredictIterator<'_, T, I>
 where
     T: Sample,
     I: Iterator<Item = T>,

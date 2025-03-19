@@ -12,13 +12,13 @@ async fn wave_file_predict_stream() -> Result<(), Box<dyn std::error::Error>> {
     let mut nonspeech =
         hound::WavWriter::create("tests/.outputs/predict.stream.nonspeech.wav", spec)?;
 
-    let vad = VoiceActivityDetector::builder()
+    let mut vad = VoiceActivityDetector::builder()
         .chunk_size(256usize)
         .sample_rate(spec.sample_rate)
         .build()?;
 
     let chunks = reader.samples::<i16>().map_while(Result::ok);
-    let mut chunks = tokio_stream::iter(chunks).predict(vad);
+    let mut chunks = tokio_stream::iter(chunks).predict(&mut vad);
 
     while let Some((chunk, probability)) = chunks.next().await {
         if probability > 0.5 {

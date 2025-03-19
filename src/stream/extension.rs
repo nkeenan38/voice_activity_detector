@@ -7,7 +7,7 @@ use crate::{LabelStream, PredictStream, Sample, VoiceActivityDetector};
 /// Extensions for streams.
 pub trait StreamExt: Stream {
     /// Creates a new [PredictStream] from a stream of samples.
-    fn predict(self, vad: VoiceActivityDetector) -> PredictStream<Self::Item, Self>
+    fn predict(self, vad: &mut VoiceActivityDetector) -> PredictStream<'_, Self::Item, Self>
     where
         Self::Item: Sample,
         Self: Sized,
@@ -21,10 +21,10 @@ pub trait StreamExt: Stream {
     /// Creates a new [LabelStream] from an iterator of samples.
     fn label(
         self,
-        vad: VoiceActivityDetector,
+        vad: &mut VoiceActivityDetector,
         threshold: f32,
         padding_chunks: usize,
-    ) -> LabelStream<Self::Item, Self>
+    ) -> LabelStream<'_, Self::Item, Self>
     where
         Self::Item: Sample,
         Self: Sized,

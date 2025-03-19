@@ -3,15 +3,15 @@ use crate::{PredictIterator, Sample};
 
 /// Labels an iterator of speech samples as either speech or non-speech according
 /// to the provided speech sensitity.
-pub struct LabelIterator<T, I>
+pub struct LabelIterator<'a, T, I>
 where
     I: Iterator,
 {
-    pub(super) iter: PredictIterator<T, I>,
+    pub(super) iter: PredictIterator<'a, T, I>,
     pub(super) state: LabelState<T>,
 }
 
-impl<T, I> Iterator for LabelIterator<T, I>
+impl<T, I> Iterator for LabelIterator<'_, T, I>
 where
     T: Sample,
     I: Iterator<Item = T>,

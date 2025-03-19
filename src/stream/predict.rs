@@ -8,16 +8,16 @@ use crate::Sample;
 
 /// Predicts speech in a stream of audio samples.
 #[pin_project]
-pub struct PredictStream<T, St>
+pub struct PredictStream<'a, T, St>
 where
     St: Stream,
 {
     #[pin]
     pub(super) stream: St,
-    pub(super) state: PredictState<T>,
+    pub(super) state: PredictState<'a, T>,
 }
 
-impl<T, St> Stream for PredictStream<T, St>
+impl<T, St> Stream for PredictStream<'_, T, St>
 where
     T: Sample,
     St: Stream<Item = T>,

@@ -12,14 +12,14 @@ async fn wave_file_label_iterator() -> Result<(), Box<dyn std::error::Error>> {
     let mut nonspeech =
         hound::WavWriter::create("tests/.outputs/label.stream.nonspeech.wav", spec)?;
 
-    let vad = VoiceActivityDetector::builder()
+    let mut vad = VoiceActivityDetector::builder()
         .chunk_size(256usize)
         .sample_rate(spec.sample_rate)
         .build()?;
 
     let chunks = reader.samples::<i16>().map_while(Result::ok);
 
-    let mut chunks = tokio_stream::iter(chunks).label(vad, 0.5, 10);
+    let mut chunks = tokio_stream::iter(chunks).label(&mut vad, 0.5, 10);
 
     while let Some(chunk) = chunks.next().await {
         if chunk.is_speech() {

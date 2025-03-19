@@ -1,19 +1,35 @@
-use ort::{session::Session, session::builder::GraphOptimizationLevel};
+use ort::{session::builder::GraphOptimizationLevel, session::Session};
+use std::sync::{Arc, LazyLock};
 
 use crate::{error::Error, Sample};
 
 /// A voice activity detector session.
 #[derive(Debug)]
 pub struct VoiceActivityDetector {
+    session: Arc<Session>,
     chunk_size: usize,
     sample_rate: i64,
-    session: Session,
     h: ndarray::Array3<f32>,
     c: ndarray::Array3<f32>,
 }
 
 /// The silero ONNX model as bytes.
 const MODEL: &[u8] = include_bytes!("silero_vad.onnx");
+
+static DEFAULT_SESSION: LazyLock<Arc<Session>> = LazyLock::new(|| {
+    Arc::new({
+        Session::builder()
+            .unwrap()
+            .with_optimization_level(GraphOptimizationLevel::Level3)
+            .unwrap()
+            .with_intra_threads(1)
+            .unwrap()
+            .with_inter_threads(1)
+            .unwrap()
+            .commit_from_memory(MODEL)
+            .unwrap()
+    })
+});
 
 impl VoiceActivityDetector {
     /// Create a new [VoiceActivityDetectorBuilder].
@@ -99,7 +115,7 @@ struct VoiceActivityDetectorConfig {
     #[builder(setter(into))]
     sample_rate: i64,
     #[builder(default, setter(strip_option))]
-    session: Option<Session>,
+    session: Option<Arc<Session>>,
 }
 
 impl From<VoiceActivityDetectorConfig> for Result<VoiceActivityDetector, Error> {
@@ -111,18 +127,7 @@ impl From<VoiceActivityDetectorConfig> for Result<VoiceActivityDetector, Error> 
             });
         }
 
-        let session = value.session.unwrap_or_else(|| {
-            Session::builder()
-                .unwrap()
-                .with_optimization_level(GraphOptimizationLevel::Level3)
-                .unwrap()
-                .with_intra_threads(1)
-                .unwrap()
-                .with_inter_threads(1)
-                .unwrap()
-                .commit_from_memory(MODEL)
-                .unwrap()
-        });
+        let session = value.session.unwrap_or_else(|| DEFAULT_SESSION.clone());
 
         Ok(VoiceActivityDetector {
             session,

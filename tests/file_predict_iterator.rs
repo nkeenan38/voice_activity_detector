@@ -11,12 +11,15 @@ fn wave_file_predict_iterator() -> Result<(), Box<dyn std::error::Error>> {
     let mut nonspeech =
         hound::WavWriter::create("tests/.outputs/predict.iter.nonspeech.wav", spec)?;
 
-    let vad = VoiceActivityDetector::builder()
+    let mut vad = VoiceActivityDetector::builder()
         .chunk_size(256usize)
         .sample_rate(spec.sample_rate)
         .build()?;
 
-    let chunks = reader.samples::<i16>().map_while(Result::ok).predict(vad);
+    let chunks = reader
+        .samples::<i16>()
+        .map_while(Result::ok)
+        .predict(&mut vad);
 
     for (chunk, probability) in chunks {
         if probability > 0.5 {
