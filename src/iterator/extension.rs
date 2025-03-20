@@ -1,7 +1,7 @@
+use super::SegmentMergerState;
 use crate::label::LabelState;
 use crate::predict::PredictState;
-use crate::{LabelIterator, PredictIterator, Sample, VoiceActivityDetector, SegmentMergerIterator};
-use super::SegmentMergerState;
+use crate::{LabelIterator, PredictIterator, Sample, SegmentMergerIterator, VoiceActivityDetector};
 
 /// Extensions for iterators.
 pub trait IteratorExt: Iterator {

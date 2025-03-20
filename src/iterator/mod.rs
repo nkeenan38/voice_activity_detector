@@ -5,5 +5,5 @@ mod segment;
 
 pub use extension::*;
 pub use label::*;
-pub use segment::*;
 pub use predict::*;
+pub use segment::*;
