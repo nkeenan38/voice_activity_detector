@@ -11,7 +11,7 @@ mod stream;
 mod vad;
 
 pub use error::Error;
-pub use iterator::{IteratorExt, LabelIterator, PredictIterator};
+pub use iterator::{IteratorExt, LabelIterator, PredictIterator, SegmentMergerIterator};
 pub use label::LabeledAudio;
 pub use sample::Sample;
 #[cfg(feature = "async")]

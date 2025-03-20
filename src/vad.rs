@@ -7,8 +7,8 @@ use crate::{error::Error, Sample};
 #[derive(Debug)]
 pub struct VoiceActivityDetector {
     session: Arc<Session>,
-    chunk_size: usize,
-    sample_rate: i64,
+    pub(crate) chunk_size: usize,
+    pub(crate) sample_rate: i64,
     h: ndarray::Array3<f32>,
     c: ndarray::Array3<f32>,
 }
