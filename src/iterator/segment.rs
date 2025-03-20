@@ -24,6 +24,15 @@ impl<T> SegmentMergerState<T> {
     }
 }
 
+/// A struct that merges consecutive speech chunks into voice segments based on prediction probabilities.
+///
+/// This iterator takes an input iterator of audio samples and a `VoiceActivityDetector`, 
+/// and yields vectors of samples that represent voice segments. It uses a threshold to determine 
+/// whether a chunk is speech or not, and merges consecutive speech chunks into segments, 
+/// considering maximum speech duration and minimum silence duration constraints.
+///
+/// This is particularly useful in audio processing applications where audio needs to be 
+/// segmented into meaningful voice parts.
 pub struct SegmentMergerIterator<'a, T, I>
 where
     I: Iterator<Item = T>,
