@@ -46,9 +46,10 @@ where
         let mut current_segment = std::mem::take(&mut self.state.current_segment);
         let mut consecutive_silence = self.state.consecutive_silence;
 
-        while let Some((chunk, probability)) = self.iter.next() {
+        for (chunk, probability) in self.iter.by_ref() {
             if probability > threshold {
-                if !current_segment.is_empty() && current_segment.len() + chunk.len() > max_samples {
+                if !current_segment.is_empty() && current_segment.len() + chunk.len() > max_samples
+                {
                     self.state.current_segment = chunk;
                     self.state.consecutive_silence = 0;
                     return Some(current_segment);
