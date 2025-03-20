@@ -51,8 +51,8 @@ pub trait IteratorExt: Iterator {
         let chunk_duration_ms = (vad.chunk_size as f64 / vad.sample_rate as f64) * 1000.0;
         let max_chunks = (max_speech_ms as f64 / chunk_duration_ms).ceil() as usize;
         let min_sil_chunks = (min_sil_ms as f64 / chunk_duration_ms).ceil() as usize;
-        
-        let max_samples = max_chunks * vad.chunk_size ;
+
+        let max_samples = max_chunks * vad.chunk_size;
         let state = SegmentMergerState::new(threshold, max_samples, min_sil_chunks);
         SegmentMergerIterator {
             iter: self.predict(vad),
