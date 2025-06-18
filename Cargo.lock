@@ -1110,6 +1110,7 @@ dependencies = [
  "itertools",
  "ndarray",
  "ort",
+ "ort-sys",
  "pin-project",
  "thiserror",
  "tokio",

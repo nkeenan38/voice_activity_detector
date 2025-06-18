@@ -15,10 +15,25 @@ include = ["src/**/*", "LICENSE", "README.md", "CHANGELOG.md"]
 [dependencies]
 futures = "0.3.31"
 ndarray = "0.16.1"
-ort = { version = "2.0.0-rc.9", features = ["ndarray"] }
 pin-project = "1.1.10"
 thiserror = "^2"
 typed-builder = "0.20.1"
+
+# Lock the 'ort' dependency to exactly version 2.0.0-rc.9
+# Reason:
+# When specifying version = "2.0.0-rc.9" without the '=' sign,
+# Cargo treats it as a caret requirement (^2.0.0-rc.9), which includes pre-release versions like rc.10.
+# If a newer pre-release (e.g., 2.0.0-rc.10) exists, Cargo may auto-upgrade to it.
+# However, rc.10 introduces changes that cause this project to fail to compile.
+# Using '=2.0.0-rc.9' ensures that Cargo installs exactly this version, avoiding unexpected breakage.
+[dependencies.ort]
+version = "=2.0.0-rc.9"
+features = ["ndarray"]
+
+# Similarly, lock 'ort-sys' to the same exact version.
+# This ensures consistency and prevents indirect upgrades that could lead to version mismatches or build issues.
+[dependencies.ort-sys]
+version = "=2.0.0-rc.9"
 
 [dev-dependencies]
 hound = "3.5.1"
