@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+## [0.2.1](https://github.com/nkeenan38/voice_activity_detector/compare/v0.2.0...v0.2.1) - 2025-08-04
+
+### Other
+
+- update to Silero VAD V5 Model and ORT 2.0.0-rc.10 ([#50](https://github.com/nkeenan38/voice_activity_detector/pull/50))
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
